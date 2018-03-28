@@ -17,6 +17,7 @@ $(document).ready(function(){
 //Initialize map with current location marker
 function initMap(lat,lng) {  
     var userPosition = {lat: lat, lng: lng};
+    var closestLocal = {lat:45.5382257, lng: -122.7077044};
     var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 15,
         center: userPosition
@@ -25,6 +26,11 @@ function initMap(lat,lng) {
        position: userPosition,
        map: map
    });
+  
+    var closestLocationMarker = new google.maps.Marker({
+       position: closestLocal,
+       map: map
+    });
 }
 //Find closest charging dock
 function findDock(lat,lng) {
@@ -33,8 +39,10 @@ function findDock(lat,lng) {
   $.ajax ({
     url: api,
     type: 'GET',
+    dataType:'JSON',
     success: function(response) {
-    console.log(response[2,0]);
+    console.log(response.map(addressinfo => this.latitude));
+     
     }
   })  
 }
