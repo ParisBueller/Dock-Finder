@@ -1,6 +1,5 @@
 var lat,lng;
-var url = "https://api.openchargemap.io/v2/poi/?output=json&countrycode=US&distance=&distanceunit=miles&maxresults=10&compact=true&verbose=false&latitude=";
-
+var url = "https://api.openchargemap.io/v2/poi/?output=json&countrycode=US&distance=&distanceunit=miles&maxresults=5&opendata=true&compact=true&verbose=false&includecomments=true&latitude=";
 
 //Obtain users current location in latitude and longitude
 $(document).ready(function(){
@@ -15,22 +14,18 @@ $(document).ready(function(){
     }  
 })
 //Initialize map with current location marker
-function initMap(lat,lng) {  
+function initMap(lat,lng) { 
     var userPosition = {lat: lat, lng: lng};
-    var closestLocal = {lat:45.5382257, lng: -122.7077044};
+    
     var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 15,
         center: userPosition
     });
-    var marker = new google.maps.Marker({
+    var userMarker = new google.maps.Marker({
        position: userPosition,
        map: map
    });
-  
-    var closestLocationMarker = new google.maps.Marker({
-       position: closestLocal,
-       map: map
-    });
+
 }
 //Find closest charging dock
 function findDock(lat,lng) {
@@ -40,9 +35,20 @@ function findDock(lat,lng) {
     url: api,
     type: 'GET',
     dataType:'JSON',
-    success: function(response) {
-    console.log(response.map(addressinfo => this.latitude));
-     
+    success: data => {
+      //Results go from closest(0) to furthest(4) away from user's current position
+       var addressOne = data[0]['AddressInfo'];
+       var addressTwo = data[1]['AddressInfo'];
+       var addressThree = data[2]['AddressInfo'];
+       var addressFour = data[3]['AddressInfo'];
+       var addressFive = data[4]['AddressInfo'];
+      
+        
+      console.log(addressOne.Latitude);
+      console.log(addressOne.Longitude);
+      //console.log(addressTwo);
+   
+    
     }
   })  
 }
