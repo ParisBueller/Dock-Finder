@@ -1,15 +1,19 @@
 <body>
     <div id="container">
-      <head>
-        <script async defer 
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOsF06GdEgLIR_FsdRgCW8o1eoIXHkXnQ&callback=initMap">
-        </script>
-        <script src ="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.2/css/bootstrap.css"></script>
-        <script src ="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"></script> 
-      </head>
-        <h1> C<i class="fa fa-plug"></i>arge Doc</h1>
+      <div id="header">
+        <h1> D<i class="fa fa-power-off"></i>ck Finder</h1>
+      </div>
+      
+        <form>      
+          <input class="form-control" id="zipSearch" placeholder="Search by Zip Code"></input>  
+        </form>
+      
+   
         <div id="map">
-
+           
         </div>
     </div>
-</body>
+  </body>
+       <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOsF06GdEgLIR_FsdRgCW8o1eoIXHkXnQ&callback=generateMap">
+      </script>
+  

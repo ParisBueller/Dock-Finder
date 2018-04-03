@@ -6,3 +6,8 @@
 h1{
   font-family: 'Roboto', sans-serif;
 }
+.form-control {
+  display: inline;
+  float: right;
+  width: 25%;
+}
