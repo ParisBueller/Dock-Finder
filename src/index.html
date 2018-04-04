@@ -1,19 +1,60 @@
-<body>
-    <div id="container">
-      <div id="header">
-        <h1> D<i class="fa fa-power-off"></i>ck Finder</h1>
-      </div>
-      
-        <form>      
-          <input class="form-control" id="zipSearch" placeholder="Search by Zip Code"></input>  
-        </form>
-      
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+html { height: 100%;}
+body {
+    background: #f5f5f5;
+    font-family: Helvetica, Arial, sans-serif;
+    color: #666;
+    line-height: 140%;
+    font-size: 14px;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+#map { height: 600px; width: 75%; z-index:9999; }
+
+h1{
+  font-family: 'Roboto', sans-serif;
+}
+.form-control {
+  display: inline;
+  float:right;
+  width:25%;
+}
+    </style>
+    <title>Dock Finder</title>
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" 
+            integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" 
+            crossorigin="anonymous"></script>
    
-        <div id="map">
-           
-        </div>
-    </div>
-  </body>
-       <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOsF06GdEgLIR_FsdRgCW8o1eoIXHkXnQ&callback=generateMap">
-      </script>
+</head>
+<body>     
+        <h1> D<i class="fa fa-power-off"></i>ck Finder</h1>
+        <form>      
+                <input class="form-control" id="zipSearch" placeholder="Search by Zip Code"></input>  
+              </form>
+            <div id="map">
+               
+            </div>
+       
+  
+    <script src="index.js"></script> 
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOsF06GdEgLIR_FsdRgCW8o1eoIXHkXnQ&language=en&region=US&callback=generateMap" type="text/javascript">
+    </script>     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
   
