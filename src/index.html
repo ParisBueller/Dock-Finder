@@ -19,7 +19,7 @@ body {
     margin: 0;
     padding: 0;
 }
-#map { height: 600px; width: 75%; z-index:9999; }
+#map { height: 100%; width: 100%; z-index:9999; }
 
 h1{
   font-family: 'Roboto', sans-serif;
@@ -31,6 +31,7 @@ h1{
 }
     </style>
     <title>Dock Finder</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script
             src="https://code.jquery.com/jquery-3.3.1.js"
             integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
@@ -42,12 +43,12 @@ h1{
 </head>
 <body>     
         <h1> D<i class="fa fa-power-off"></i>ck Finder</h1>
-        <form>      
-                <input class="form-control" id="zipSearch" placeholder="Search by Zip Code"></input>  
-              </form>
-            <div id="map">
+          <form>      
+              <input class="form-control" id="zipSearch" placeholder="Search by Zip Code"></input>  
+          </form>
+          <div id="map">
                
-            </div>
+          </div>
        
   
     <script src="index.js"></script> 

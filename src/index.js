@@ -72,3 +72,39 @@ const fetchChargeLocations = (currentLocation) => {
         });
       });
 };
+
+//Geocode
+var zipSearch = document.getElementById('zipSearch');
+
+       locationForm.addEventListener('submit', geoCode);
+        function geoCode(e) {
+            //Prevent actual submit
+            e.preventDefault();
+            var location = document.getElementById('zipSearch').value;
+            axios.get('https://maps.googleapis.com/maps/api/geocode/json?', {
+                params:{
+                    address: location,
+                    key:'AIzaSyCOsF06GdEgLIR_FsdRgCW8o1eoIXHkXnQ'
+                }
+            })
+            .then(function(response) {
+                //log full response
+                console.log(response);    
+
+                //formatted address
+                var formattedAddress = response.data.results[0].formatted_address;  
+               //address components
+                var addressComponents = response.data.results[0].address_components;     
+                 //geometry
+                var lat = response.data.results[0].geometry.location.lat;  
+                var lng = response.data.results[0].geometry.location.lng;
+                const newCoords = {lat: lat, lng: lng};
+
+
+
+
+            })
+            .catch(function(error) {
+                console.log(error);
+            })
+        }
