@@ -2,6 +2,7 @@
 
 var url = "https://api.openchargemap.io/v2/poi/?output=json&countrycode=US&distance=&distanceunit=miles&maxresults=5&opendata=true&compact=true&verbose=false&includecomments=true&latitude=";
 let map;
+
 async function generateMap() { 
     console.log("generateMap fired");
     //Define promises, which await both the fetchCurrentLocation and fetchChargeLocations to run before running generateMap
@@ -11,6 +12,7 @@ async function generateMap() {
       zoom: 12,
       center: currentLocation
      });
+     
      createMarker(currentLocation, map);
      //Iterate through our response object of charge locations
       if(chargeLocations.length > 0){
@@ -25,9 +27,12 @@ async function generateMap() {
 
           //Create a marker for each address in our openChargeMap response
           createMarker({lat:address.lat, lng:address.lng}, map);
-        
         });
       }
+
+      map.addListener('submit', geoCode(), {
+        
+      })
 
  };
 
@@ -74,34 +79,35 @@ const fetchChargeLocations = (currentLocation) => {
 };
 
 //Geocode
-var zipSearch = document.getElementById('zipSearch');
+var locationSearch = document.getElementById('locationSearch');
 
-       locationForm.addEventListener('submit', geoCode);
-        function geoCode(e) {
+       locationSearch.addEventListener('submit', geoCode);
+        const geoCode = (e) => {
             //Prevent actual submit
             e.preventDefault();
-            var location = document.getElementById('zipSearch').value;
+            var location = document.getElementById('locationSearch').value;
             axios.get('https://maps.googleapis.com/maps/api/geocode/json?', {
                 params:{
                     address: location,
                     key:'AIzaSyCOsF06GdEgLIR_FsdRgCW8o1eoIXHkXnQ'
                 }
             })
-            .then(function(response) {
-                //log full response
-                console.log(response);    
+            .then(response => {
+                console.log(response);
+                var newLat = response.data.resuts[0].geometry.location.lat;
+                var newLng = response.data.results[0].location.lng;
+                
+                map = new google.maps.Map(document.getElementById('map'), {
+                  zoom:12,
+                  center: {lat: newLat, lng: newLng}
+                });
 
-                //formatted address
-                var formattedAddress = response.data.results[0].formatted_address;  
-               //address components
-                var addressComponents = response.data.results[0].address_components;     
-                 //geometry
-                var lat = response.data.results[0].geometry.location.lat;  
-                var lng = response.data.results[0].geometry.location.lng;
-                const newCoords = {lat: lat, lng: lng};
-
-
-
+                //var formattedAddress = response.data.results[0].formatted_address;  
+                //var addressComponents = response.data.results[0].address_components;     
+                //geometry
+                //var lat = response.data.results[0].geometry.location.lat;  
+                //var lng = response.data.results[0].geometry.location.lng;
+ 
 
             })
             .catch(function(error) {
