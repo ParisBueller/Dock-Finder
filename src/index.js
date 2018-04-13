@@ -3,19 +3,46 @@
 var url = "https://api.openchargemap.io/v2/poi/?output=json&countrycode=US&distance=&distanceunit=miles&maxresults=5&opendata=true&compact=true&verbose=false&includecomments=true&latitude=";
 let map;
 
-async function generateMap() { 
+
+async function generateMap(searchLocation) { 
     console.log("generateMap fired");
-    //Define promises, which await both the fetchCurrentLocation and fetchChargeLocations to run before running generateMap
-    const currentLocation = await fetchCurrentLocation();
-    const chargeLocations = await fetchChargeLocations(currentLocation);
+    if(searchLocation) {
+      const inputLocation = searchLocation;
+      console.log("input", inputLocation);
+      const chargeLocations = await fetchChargeLocations(searchLocation);
+      console.log(chargeLocations);
       map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 12,
-      center: currentLocation
-     });
-     
-     createMarker(currentLocation, map);
-     //Iterate through our response object of charge locations
-      if(chargeLocations.length > 0){
+        zoom: 12,
+      center: inputLocation
+    });
+    createMarker(inputLocation, map);
+    if(chargeLocations.length > 0){
+      chargeLocations.forEach(location => {
+        var address = {};
+        address.lat = location.AddressInfo.Latitude;
+        address.lng = location.AddressInfo.Longitude;
+        address.address = location.AddressInfo.AddressLine1;
+        address.comments = location.AddressInfo.AccessComments;
+        address.distance = location.AddressInfo.Distance;
+        address.zip = location.AddressInfo.PostCode;
+
+        //Create a marker for each address in our openChargeMap response
+        createMarker({lat:address.lat, lng:address.lng}, map);
+      });
+    }
+
+    } else {
+              //Define promises, which await both the fetchCurrentLocation and fetchChargeLocations to run before running generateMap
+        const currentLocation = await fetchCurrentLocation();
+        const chargeLocations = await fetchChargeLocations(currentLocation);
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 12,
+          center: currentLocation
+        });
+      
+        createMarker(currentLocation, map);
+      //Iterate through our response object of charge locations
+        if(chargeLocations.length > 0){
         chargeLocations.forEach(location => {
           var address = {};
           address.lat = location.AddressInfo.Latitude;
@@ -24,25 +51,34 @@ async function generateMap() {
           address.comments = location.AddressInfo.AccessComments;
           address.distance = location.AddressInfo.Distance;
           address.zip = location.AddressInfo.PostCode;
-
+          
           //Create a marker for each address in our openChargeMap response
-          createMarker({lat:address.lat, lng:address.lng}, map);
+         createMarker({lat:address.lat, lng:address.lng}, map, address);
         });
       }
-
-      map.addListener('submit', geoCode(), {
-        
-      })
-
+    }
  };
 
- const createMarker = (pos, map) => {
-   return new google.maps.Marker({
+
+
+ const createMarker = (pos, map, optionalAddress) => {
+   let marker =  new google.maps.Marker({
     position: pos,
     map: map
     });
+    
+    attachListener(marker, optionalAddress);
  };
 
+const attachListener = (marker, optionalAddress) => {
+  marker.addListener("click", function(e){
+    $("#markerModalText").html(
+      `The address is ${optionalAddress.address} <br>
+      The distance is ${optionalAddress.distance.toFixed(2)} Miles`
+    );
+    $('#exampleModal').appendTo("body").modal('show');
+  });
+};
 //Get current location
 const fetchCurrentLocation = function(){
   return new Promise((resolve, reject) => {
@@ -78,39 +114,44 @@ const fetchChargeLocations = (currentLocation) => {
       });
 };
 
-//Geocode
-var locationSearch = document.getElementById('locationSearch');
 
-       locationSearch.addEventListener('submit', geoCode);
-        const geoCode = (e) => {
-            //Prevent actual submit
-            e.preventDefault();
-            var location = document.getElementById('locationSearch').value;
-            axios.get('https://maps.googleapis.com/maps/api/geocode/json?', {
-                params:{
-                    address: location,
-                    key:'AIzaSyCOsF06GdEgLIR_FsdRgCW8o1eoIXHkXnQ'
-                }
-            })
-            .then(response => {
-                console.log(response);
-                var newLat = response.data.resuts[0].geometry.location.lat;
-                var newLng = response.data.results[0].location.lng;
-                
-                map = new google.maps.Map(document.getElementById('map'), {
-                  zoom:12,
-                  center: {lat: newLat, lng: newLng}
-                });
 
-                //var formattedAddress = response.data.results[0].formatted_address;  
-                //var addressComponents = response.data.results[0].address_components;     
-                //geometry
-                //var lat = response.data.results[0].geometry.location.lat;  
-                //var lng = response.data.results[0].geometry.location.lng;
- 
 
-            })
-            .catch(function(error) {
-                console.log(error);
-            })
-        }
+$("#location_form").on("submit", function(e){
+  e.preventDefault();
+ const location = typeof($("#locationSearch").val()) === "string" && $("#locationSearch").val().trim().length > 0 ? $("#locationSearch").val().trim() : false;
+ if(location) {
+  fetchInputLocation(location);
+ } else {
+   alert("missing required fields");
+ }
+});
+
+
+const fetchInputLocation = (location) => {
+  axios.get('https://maps.googleapis.com/maps/api/geocode/json?', {
+    params:{
+        address: location,
+        key:'AIzaSyCOsF06GdEgLIR_FsdRgCW8o1eoIXHkXnQ'
+    }
+})
+.then(function(response) {
+    //log full response
+    console.log(response);    
+
+    // //formatted address
+    // var formattedAddress = response.data.results[0].formatted_address;  
+
+    // //address components
+    // var addressComponents = response.data.results[0].address_components;
+  
+    //  //formatted address
+    var lat = response.data.results[0].geometry.location.lat;  
+    var lng = response.data.results[0].geometry.location.lng; 
+    generateMap({lat:lat, lng:lng});
+
+   
+}).catch(function(error) {
+    console.log(error);
+})
+};
