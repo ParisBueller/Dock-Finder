@@ -1,11 +1,13 @@
 
-
+//Global variables, openchargemap api and map variable
 var url = "https://api.openchargemap.io/v2/poi/?output=json&countrycode=US&distance=&distanceunit=miles&maxresults=5&opendata=true&compact=true&verbose=false&includecomments=true&latitude=";
 let map;
 
-
+//Asynchronus function that generates our map
 async function generateMap(searchLocation) { 
     console.log("generateMap fired");
+    //If a location has been input(searchLocation), generate a map
+    //and fetch charge locations near the searched location
     if(searchLocation) {
       const inputLocation = searchLocation;
       console.log("input", inputLocation);
@@ -16,6 +18,8 @@ async function generateMap(searchLocation) {
       center: inputLocation
     });
     createMarker(inputLocation, map);
+    //Iterate through our response object of charge locations
+    //And aquire location information
     if(chargeLocations.length > 0){
       chargeLocations.forEach(location => {
         var address = {};
@@ -30,10 +34,12 @@ async function generateMap(searchLocation) {
         createMarker({lat:address.lat, lng:address.lng}, map);
       });
     }
-
+    // IF no location search input, generate a map and fetch charge locations
+    //based on users current location
     } else {
-              //Define promises, which await both the fetchCurrentLocation and fetchChargeLocations to run before running generateMap
+        //Async await functions that await users current location
         const currentLocation = await fetchCurrentLocation();
+        // and the openchargemap response for the nearest charge locations
         const chargeLocations = await fetchChargeLocations(currentLocation);
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 12,
@@ -41,7 +47,8 @@ async function generateMap(searchLocation) {
         });
       
         createMarker(currentLocation, map);
-      //Iterate through our response object of charge locations
+        //Iterate through our response object of charge locations
+        //And aquire location information
         if(chargeLocations.length > 0){
         chargeLocations.forEach(location => {
           var address = {};
@@ -60,7 +67,7 @@ async function generateMap(searchLocation) {
  };
 
 
-
+//Create marker function 
  const createMarker = (pos, map, optionalAddress) => {
    let marker =  new google.maps.Marker({
     position: pos,
@@ -69,7 +76,7 @@ async function generateMap(searchLocation) {
     
     attachListener(marker, optionalAddress);
  };
-
+//A popup modal that offers location information when clicked
 const attachListener = (marker, optionalAddress) => {
   marker.addListener("click", function(e){
     $("#markerModalText").html(
@@ -96,7 +103,7 @@ const fetchCurrentLocation = function(){
     }
   });
 };
-//Get nearest charging locations based on currentLocation
+//Ajax call to openchargemap to get nearest charging locations based on currentLocation
 const fetchChargeLocations = (currentLocation) => {
   return new Promise((resolve, reject)=>{
     const api = url + currentLocation.lat + "&" + "longitude=" + currentLocation.lng;
@@ -116,7 +123,7 @@ const fetchChargeLocations = (currentLocation) => {
 
 
 
-
+//Trim whitespace of input form and prevent default submit
 $("#location_form").on("submit", function(e){
   e.preventDefault();
  const location = typeof($("#locationSearch").val()) === "string" && $("#locationSearch").val().trim().length > 0 ? $("#locationSearch").val().trim() : false;
@@ -127,7 +134,7 @@ $("#location_form").on("submit", function(e){
  }
 });
 
-
+// Aquire geocoding information for any searched location via axios
 const fetchInputLocation = (location) => {
   axios.get('https://maps.googleapis.com/maps/api/geocode/json?', {
     params:{
@@ -136,7 +143,7 @@ const fetchInputLocation = (location) => {
     }
 })
 .then(function(response) {
-    //log full response
+
     console.log(response);    
 
     // //formatted address
