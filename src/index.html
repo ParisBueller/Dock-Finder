@@ -23,6 +23,7 @@ body {
 
 h1{
   font-family: 'Roboto', sans-serif;
+  color:black;
 }
 .form-control {
   display: inline;
@@ -41,14 +42,19 @@ h1{
             crossorigin="anonymous"></script>
    
 </head>
-<body>     
+<body>
+  <nav class="navbar navbar-expand-md navbar-light bg-light justify-content-between">
+    <div class="navar-brand">
         <h1> D<i class="fa fa-power-off"></i>ck Finder</h1>
-          <form id="location_form">      
-              <input class="form-control" id="locationSearch" name="locationSearch" placeholder="Search by City, Zip Code or Address"></input>  
-          </form>
-          <div id="map">
+    </div>
+    <form class="form-inline" id="location_form">      
+      <input class="form-control" id="locationSearch" name="locationSearch" placeholder="Search by City, Zip Code or Address"></input> 
+      <button class="btn btn-light"><i class="fa fa-search"></i></button> 
+    </form>
+  </nav>              
+  <div id="map">
                
-          </div>
+  </div>
        
           <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index:9999">
