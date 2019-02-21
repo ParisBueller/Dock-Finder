@@ -5,14 +5,11 @@ let map;
 
 //Asynchronus function that generates our map
 async function generateMap(searchLocation) { 
-    console.log("generateMap fired");
     //If a location has been input(searchLocation), generate a map
     //and fetch charge locations near the searched location
     if(searchLocation) {
       const inputLocation = searchLocation;
-      console.log("input", inputLocation);
       const chargeLocations = await fetchChargeLocations(searchLocation);
-      console.log(chargeLocations);
       map = new google.maps.Map(document.getElementById('map'), {
         zoom: 12,
       center: inputLocation
@@ -143,16 +140,6 @@ const fetchInputLocation = (location) => {
     }
 })
 .then(function(response) {
-
-    console.log(response);    
-
-    // //formatted address
-    // var formattedAddress = response.data.results[0].formatted_address;  
-
-    // //address components
-    // var addressComponents = response.data.results[0].address_components;
-  
-    //  //formatted address
     var lat = response.data.results[0].geometry.location.lat;  
     var lng = response.data.results[0].geometry.location.lng; 
     generateMap({lat:lat, lng:lng});
